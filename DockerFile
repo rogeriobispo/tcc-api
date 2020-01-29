@@ -1,0 +1,6 @@
+FROM node:10
+WORKDIR /usr/app
+COPY . .
+run yarn 
+EXPOSE 3333
+CMD yarn start
