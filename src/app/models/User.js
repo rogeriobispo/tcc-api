@@ -5,7 +5,7 @@ class User extends Model {
     static init(sequelize) {
         super.init(
             {
-                nome: Sequelize.STRING,
+                name: Sequelize.STRING,
                 email: Sequelize.STRING,
                 password: Sequelize.VIRTUAL,
                 password_hash: Sequelize.STRING,
@@ -23,6 +23,10 @@ class User extends Model {
         });
 
         return this;
+    }
+
+    static associate(models) {
+        this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' });
     }
 
     checkPassword(password) {

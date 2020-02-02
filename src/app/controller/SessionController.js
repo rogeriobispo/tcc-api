@@ -23,11 +23,11 @@ class SessionController {
         if (!(await user.checkPassword(password)))
             return res.status(401).json({ error: 'Wrong Password' });
 
-        const { id, nome } = user;
+        const { id, name } = user;
         return res.json({
             user: {
                 id,
-                nome,
+                name,
                 email,
             },
             token: jwt.sign({ id }, authConfig.secret, {

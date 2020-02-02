@@ -21,10 +21,10 @@ class UserController {
         if (userExists)
             return res.status(400).json({ error: 'user already exists' });
         const user = await User.create(req.body);
-        const { id, nome, email, provider } = user;
+        const { id, name, email, provider } = user;
         return res.json({
             id,
-            nome,
+            name,
             email,
             provider,
         });
@@ -40,10 +40,14 @@ class UserController {
                 .when('oldPassword', (oldPassword, field) =>
                     oldPassword ? field.required() : field
                 ),
-                confirmPassword: Yup.string().when('password',(password, filed)=>{
-                    return password ? field.required().oneOf([Yup.ref('password')])
-                }),
-
+            confirmPassword: Yup.string().when(
+                'password',
+                (password, field) => {
+                    return password
+                        ? field.required([Yup.ref('password')])
+                        : field;
+                }
+            ),
         });
 
         if (!(await schema.isValid(req.body))) return res.status(422).json();
@@ -61,11 +65,11 @@ class UserController {
         if (oldPassword && !(await user.checkPassword(oldPassword)))
             return res.status(401).json({ error: 'Invalid Password' });
 
-        const { id, nome, provider } = await user.update(req.body);
+        const { id, name, provider } = await user.update(req.body);
 
         return res.json({
             id,
-            nome,
+            name,
             email,
             provider,
         });
