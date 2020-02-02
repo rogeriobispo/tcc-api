@@ -23,7 +23,7 @@ class AppointmentController {
                 {
                     model: User,
                     as: 'provider',
-                    attributes: ['id', 'name'],
+                    attributes: ['id', 'name', 'past', 'cancelable'],
                     include: [
                         {
                             model: File,
