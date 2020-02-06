@@ -3,18 +3,6 @@ import User from '../models/User';
 
 class UserController {
     async store(req, res) {
-        const schema = Yup.object().shape({
-            name: Yup.string().required(),
-            email: Yup.string()
-                .email()
-                .required(),
-            password: Yup.string()
-                .required()
-                .min(6),
-        });
-
-        if (!(await schema.isValid(req.body))) return res.status(422).json();
-
         const userExists = await User.findOne({
             where: { email: req.body.email },
         });
@@ -31,29 +19,7 @@ class UserController {
     }
 
     async update(req, res) {
-        const schema = Yup.object().shape({
-            name: Yup.string(),
-            email: Yup.string().email(),
-            oldPassword: Yup.string().min(6),
-            password: Yup.string()
-                .min(6)
-                .when('oldPassword', (oldPassword, field) =>
-                    oldPassword ? field.required() : field
-                ),
-            confirmPassword: Yup.string().when(
-                'password',
-                (password, field) => {
-                    return password
-                        ? field.required([Yup.ref('password')])
-                        : field;
-                }
-            ),
-        });
-
-        if (!(await schema.isValid(req.body))) return res.status(422).json();
-
-        const { email, oldPassword } = req.body;
-
+        const { email, old_password, confirm_password } = req.body;
         const user = await User.findByPk(req.userId);
 
         if (email && email !== user.email) {
@@ -62,16 +28,16 @@ class UserController {
                 return res.status(422).json({ error: 'User already exists' });
         }
 
-        if (oldPassword && !(await user.checkPassword(oldPassword)))
+        if (confirm_password && !(await user.checkPassword(old_password)))
             return res.status(401).json({ error: 'Invalid Password' });
 
-        const { id, name, provider } = await user.update(req.body);
+        const { id, name, doctor } = await user.update(req.body);
 
         return res.json({
             id,
             name,
             email,
-            provider,
+            doctor,
         });
     }
 }

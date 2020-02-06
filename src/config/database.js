@@ -4,7 +4,7 @@ module.exports = {
     port: '5431',
     username: 'root',
     password: 'root',
-    database: 'gobaber',
+    database: 'clinicalCare',
     define: {
         timesstamps: true,
         underscored: true,

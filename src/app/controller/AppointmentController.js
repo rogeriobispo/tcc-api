@@ -19,11 +19,12 @@ class AppointmentController {
             limit: size,
             offset: (page - 1) * size,
             order: ['date'],
+            attributes: ['id', 'date', 'past', 'cancelable'],
             include: [
                 {
                     model: User,
-                    as: 'provider',
-                    attributes: ['id', 'name', 'past', 'cancelable'],
+                    as: 'doctor',
+                    attributes: ['id', 'name'],
                     include: [
                         {
                             model: File,
@@ -38,37 +39,30 @@ class AppointmentController {
     }
 
     async store(req, res) {
-        const schema = Yup.object().shape({
-            provider_id: Yup.number().required(),
-            date: Yup.date().required(),
+        const { doctor_id, date } = req.body;
+
+        const isDoctor = await User.findOne({
+            where: { id: doctor_id, doctor: true },
         });
 
-        if (!(await schema.isValid(req.body)))
-            return res.status(422).json({ error: 'Validation Fails' });
-        const { provider_id, date } = req.body;
-
-        const isProvider = await User.findOne({
-            where: { id: provider_id, provider: true },
-        });
-
-        if (!isProvider)
+        if (!isDoctor)
             return res
                 .status(422)
-                .json({ error: 'only can schedule with providers' });
+                .json({ error: 'Somente pode-se agendar com médicos' });
 
         const hourStart = startOfHour(parseISO(date));
 
         if (isBefore(hourStart, new Date()))
             return res
                 .status(422)
-                .json({ error: 'Past dates are not permitted' });
-        if (provider_id === req.userId)
-            return res
-                .status(422)
-                .json({ error: 'provider must be diferente from user' });
+                .json({ error: 'Agendamento nos passado não é permitido' });
+        if (doctor_id === req.userId)
+            return res.status(422).json({
+                error: 'Doutor deve ser diferente do usuario que agenda',
+            });
         const checkAvailability = await Appointment.findOne({
             where: {
-                provider_id,
+                doctor_id,
                 canceled_at: null,
                 date: hourStart,
             },
@@ -77,11 +71,11 @@ class AppointmentController {
         if (checkAvailability)
             return res
                 .status(422)
-                .json({ error: 'Appointment date is not available' });
+                .json({ error: 'A data de agendamento não esta disponivel' });
 
         const appointment = await Appointment.create({
             user_id: req.userId,
-            provider_id,
+            doctor_id,
             date: hourStart,
         });
 
@@ -94,7 +88,7 @@ class AppointmentController {
 
         await Notification.create({
             content: `Novo agendamento de ${user.name} para ${formatedDate}`,
-            user: provider_id,
+            user: doctor_id,
         });
         return res.json({ appointment });
     }
@@ -104,7 +98,7 @@ class AppointmentController {
             include: [
                 {
                     model: User,
-                    as: 'provider',
+                    as: 'doctor',
                     attributes: ['name', 'email'],
                 },
                 {

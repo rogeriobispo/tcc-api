@@ -8,11 +8,11 @@ class SchedulerController {
         const { page = 1, size = 20 } = req.query;
 
         const checkUserProvider = await User.findOne({
-            where: { id: req.userId, provider: true },
+            where: { id: req.userId, doctor: true },
         });
 
         if (!checkUserProvider)
-            return res.status(422).json({ error: 'User is not a provider' });
+            return res.status(422).json({ error: 'Usuário não é um médico' });
 
         const { date } = req.query;
         const parsedDate = parseISO(date);

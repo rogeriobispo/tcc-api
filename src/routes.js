@@ -4,6 +4,12 @@ import multerConfig from './config/multer';
 
 import UserController from './app/controller/UserController';
 
+import SessionsValidator from './app/validators/session/sessionsValidations';
+import UserCreateValidation from './app/validators/users/UserCreateValidation';
+import UserUpdateValidation from './app/validators/users/UserUpdateValidation';
+import AppointmentCreateValidation from './app/validators/Appointment/AppointmentCreateValidation';
+import AvailebleDoctorValidation from './app/validators/Available/AvailebleDoctorValidation';
+
 import ProvidersController from './app/controller/ProvidersController';
 import SessionController from './app/controller/SessionController';
 import FileController from './app/controller/FileController';
@@ -16,18 +22,27 @@ import AvailableController from './app/controller/AvailableController';
 const routes = new Router();
 const upload = multer(multerConfig);
 
-routes.post('/users', UserController.store);
-routes.post('/sessions', SessionController.store);
+routes.post('/sessions', SessionsValidator, SessionController.store);
 routes.use(authenticated);
 
-routes.post('/appointments', AppointmentController.store);
+routes.post(
+    '/appointments',
+    AppointmentCreateValidation,
+    AppointmentController.store
+);
 routes.get('/appointments', AppointmentController.index);
 routes.delete('/appointments/:id', AppointmentController.delete);
 
-routes.put('/users', UserController.update);
+routes.post('/users', UserCreateValidation, UserController.store);
+routes.put('/users', UserUpdateValidation, UserController.update);
 
-routes.get('/providers', ProvidersController.index);
-routes.get('/providers/:id/available', AvailableController.index);
+routes.get('/doctors', ProvidersController.index);
+
+routes.get(
+    '/doctors/:id/available',
+    AvailebleDoctorValidation,
+    AvailableController.index
+);
 
 routes.get('/notifications', NotificationController.index);
 routes.put('/notifications/:id', NotificationController.update);

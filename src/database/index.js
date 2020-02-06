@@ -25,7 +25,7 @@ class Database {
 
     mongo() {
         this.mongooseconnection = mongoose.connect(
-            'mongodb://localhost:27017/gobaber',
+            'mongodb://localhost:27017/clinicalCare',
             { useNewUrlParser: true, useFindAndModify: true }
         );
     }
