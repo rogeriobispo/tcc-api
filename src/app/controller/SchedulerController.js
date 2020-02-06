@@ -19,7 +19,7 @@ class SchedulerController {
 
         const appointments = await Appointment.findAll({
             where: {
-                provider_id: req.userId,
+                doctor_id: req.userId,
                 canceled_at: null,
                 date: {
                     [Op.between]: [
@@ -33,7 +33,7 @@ class SchedulerController {
             order: ['date'],
         });
 
-        return res.json({ appointments });
+        return res.json(appointments);
     }
 }
 
