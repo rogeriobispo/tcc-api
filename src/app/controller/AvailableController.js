@@ -62,5 +62,3 @@ class AvailableController {
 }
 
 export default new AvailableController();
-
-console.log(new Date().getTime());

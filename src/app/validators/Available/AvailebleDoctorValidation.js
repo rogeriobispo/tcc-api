@@ -2,7 +2,6 @@ import Doctor from '../../models/User';
 
 export default async (req, res, next) => {
     const { id: doctor_id } = req.params;
-    console.log('##########################################', doctor_id);
     const doctor = await Doctor.findOne({
         limit: 1,
         where: {
