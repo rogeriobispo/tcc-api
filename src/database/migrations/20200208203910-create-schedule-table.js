@@ -1,19 +1,30 @@
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable('specialties', {
+        return queryInterface.createTable('schedule', {
             id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
             },
-            name: {
+            doctor_id: {
+                type: Sequelize.INTEGER,
+                references: { model: 'users', key: 'id' },
+                onUpdate: 'CASCADE',
+                onDelete: 'SET NULL',
+                allowNull: true,
+            },
+            day: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
+            start_schedule: {
                 type: Sequelize.STRING,
                 allowNull: false,
             },
-            deleted: {
-                type: Sequelize.INTEGER,
-                defaultValue: 0,
+            end_schedule: {
+                type: Sequelize.STRING,
+                allowNull: false,
             },
             created_at: {
                 type: Sequelize.DATE,
@@ -27,6 +38,6 @@ module.exports = {
     },
 
     down: queryInterface => {
-        return queryInterface.dropTable('specialties');
+        return queryInterface.dropTable('schedule');
     },
 };

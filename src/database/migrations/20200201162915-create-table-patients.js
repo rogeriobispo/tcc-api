@@ -1,41 +1,43 @@
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable('appointments', {
+        return queryInterface.createTable('patients', {
             id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
             },
-
-            date: {
+            document: {
+                type: Sequelize.STRING,
                 allowNull: false,
-                type: Sequelize.DATE,
+                unique: true,
             },
-            patients_id: {
+            age: {
                 type: Sequelize.INTEGER,
-                references: { model: 'patients', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL',
                 allowNull: false,
             },
-            doctor_id: {
-                type: Sequelize.INTEGER,
-                references: { model: 'users', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL',
-                allowNull: true,
+            name: {
+                type: Sequelize.STRING,
+                allowNull: false,
             },
-            descriptions: {
-                type: Sequelize.INTEGER,
-                allowNull: true,
-            },
-            medicines_name: {
+            email: {
                 type: Sequelize.STRING,
                 allowNull: true,
             },
-            canceled_at: {
-                type: Sequelize.DATE,
+            cel: {
+                type: Sequelize.STRING,
+                allowNull: true,
+            },
+            phone: {
+                type: Sequelize.STRING,
+                allowNull: true,
+            },
+            avatar_id: {
+                type: Sequelize.INTEGER,
+                references: { model: 'files', key: 'id' },
+                onUpdate: 'CASCADE',
+                onDelete: 'SET NULL',
+                allowNull: true,
             },
             created_at: {
                 type: Sequelize.DATE,
@@ -49,6 +51,6 @@ module.exports = {
     },
 
     down: queryInterface => {
-        return queryInterface.dropTable('appointments');
+        return queryInterface.dropTable('patients');
     },
 };
