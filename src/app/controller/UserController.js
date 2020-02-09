@@ -1,8 +1,15 @@
-import * as Yup from 'yup';
+import Specialty from '../models/Specialty';
 import User from '../models/User';
 
 class UserController {
     async store(req, res) {
+        const { doctor, specialty_id } = req.body;
+        const especialty = await Specialty.findByPk(specialty_id);
+        if (doctor && !especialty)
+            return res
+                .status(422)
+                .json({ error: 'Esta especialidade não existe' });
+
         const userExists = await User.findOne({
             where: { email: req.body.email },
         });

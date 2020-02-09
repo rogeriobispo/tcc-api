@@ -12,7 +12,7 @@ import AvailebleDoctorValidation from './app/validators/Available/AvailebleDocto
 import SpecialtyCreateValidation from './app/validators/Specialty/SpecialtyCreateValidation';
 import PatientValidation from './app/validators/Patient/PatientValidation';
 
-import ProvidersController from './app/controller/ProvidersController';
+import DoctorsController from './app/controller/DoctorsController';
 import SessionController from './app/controller/SessionController';
 import FileController from './app/controller/FileController';
 import AppointmentController from './app/controller/AppointmentController';
@@ -27,6 +27,7 @@ const routes = new Router();
 const upload = multer(multerConfig);
 
 routes.post('/sessions', SessionsValidator, SessionController.store);
+
 routes.use(authenticated);
 
 routes.post(
@@ -34,21 +35,20 @@ routes.post(
     AppointmentCreateValidation,
     AppointmentController.store
 );
+routes.delete('/appointments/:id', AppointmentController.delete);
 
 routes.post('/specialty', SpecialtyCreateValidation, SpecialtyController.store);
 routes.put('/specialty/:id', SpecialtyController.update);
 routes.get('/specialty', SpecialtyController.index);
 
-routes.get('/appointments', AppointmentController.index);
-routes.delete('/appointments/:id', AppointmentController.delete);
-
 routes.post('/users', UserCreateValidation, UserController.store);
 routes.put('/users', UserUpdateValidation, UserController.update);
 
+routes.get('/patients/:id/appointments', PatientController.index);
 routes.post('/patients', PatientValidation, PatientController.store);
 routes.put('/patients', PatientValidation, PatientController.update);
 
-routes.get('/doctors', ProvidersController.index);
+routes.get('/doctors', DoctorsController.index);
 
 routes.get(
     '/doctors/:id/available',

@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 export default async (req, res, next) => {
     const schema = Yup.object().shape({
         doctor_id: Yup.number().required(),
+        patient_id: Yup.number().required(),
         date: Yup.date().required(),
     });
     if (!(await schema.isValid(req.body)))

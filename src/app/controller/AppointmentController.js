@@ -3,43 +3,20 @@ import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns';
 import pt from 'date-fns/locale/pt-BR';
 import Appointment from '../models/Appointment';
 import User from '../models/User';
-import File from '../models/File';
+import Patient from '../models/Patient';
 import Notification from '../schema/NotificationSchema';
 import Queue from '../../lib/Queue';
 import CancellatioMail from '../jobs/CancellationMail';
 
 class AppointmentController {
-    async index(req, res) {
-        const { page = 1, size = 20 } = req.query;
-        const appointments = await Appointment.findAll({
-            where: {
-                user_id: req.userId,
-                canceled_at: null,
-            },
-            limit: size,
-            offset: (page - 1) * size,
-            order: ['date'],
-            attributes: ['id', 'date', 'past', 'cancelable'],
-            include: [
-                {
-                    model: User,
-                    as: 'doctor',
-                    attributes: ['id', 'name'],
-                    include: [
-                        {
-                            model: File,
-                            as: 'avatar',
-                            attributes: ['id', 'path', 'url'],
-                        },
-                    ],
-                },
-            ],
-        });
-        return res.json(appointments);
-    }
-
     async store(req, res) {
-        const { doctor_id, date } = req.body;
+        const { doctor_id, date, patient_id } = req.body;
+
+        const patient = await Patient.findOne({
+            where: { id: patient_id },
+        });
+        if (!patient)
+            return res.status(422).json({ error: 'Paciente não localizado' });
 
         const isDoctor = await User.findOne({
             where: { id: doctor_id, doctor: true },
@@ -56,10 +33,7 @@ class AppointmentController {
             return res
                 .status(422)
                 .json({ error: 'Agendamento nos passado não é permitido' });
-        if (doctor_id === req.userId)
-            return res.status(422).json({
-                error: 'Doutor deve ser diferente do usuario que agenda',
-            });
+
         const checkAvailability = await Appointment.findOne({
             where: {
                 doctor_id,
@@ -72,14 +46,12 @@ class AppointmentController {
             return res
                 .status(422)
                 .json({ error: 'A data de agendamento não esta disponivel' });
-
         const appointment = await Appointment.create({
-            user_id: req.userId,
+            patient_id,
             doctor_id,
             date: hourStart,
         });
 
-        const user = await User.findByPk(req.userId);
         const formatedDate = format(
             hourStart,
             "'dia' dd 'de' MMMM', às' H:mm'h'",
@@ -87,7 +59,7 @@ class AppointmentController {
         );
 
         await Notification.create({
-            content: `Novo agendamento de ${user.name} para ${formatedDate}`,
+            content: `Novo agendamento de ${patient.name} para ${formatedDate}`,
             user: doctor_id,
         });
         return res.json({ appointment });

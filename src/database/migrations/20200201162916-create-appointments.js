@@ -12,7 +12,7 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.DATE,
             },
-            patients_id: {
+            patient_id: {
                 type: Sequelize.INTEGER,
                 references: { model: 'patients', key: 'id' },
                 onUpdate: 'CASCADE',

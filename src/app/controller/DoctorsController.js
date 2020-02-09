@@ -1,7 +1,7 @@
 import User from '../models/User';
 import File from '../models/File';
 
-class ProvidersController {
+class DoctorsController {
     async index(_req, res) {
         const providers = await User.findAll({
             where: { doctor: true },
@@ -16,4 +16,4 @@ class ProvidersController {
     }
 }
 
-export default new ProvidersController();
+export default new DoctorsController();
