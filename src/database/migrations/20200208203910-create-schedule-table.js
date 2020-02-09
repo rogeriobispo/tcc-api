@@ -1,6 +1,6 @@
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable('schedule', {
+        return queryInterface.createTable('schedules', {
             id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
@@ -18,11 +18,7 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            start_schedule: {
-                type: Sequelize.STRING,
-                allowNull: false,
-            },
-            end_schedule: {
+            schedule_time: {
                 type: Sequelize.STRING,
                 allowNull: false,
             },
@@ -38,6 +34,6 @@ module.exports = {
     },
 
     down: queryInterface => {
-        return queryInterface.dropTable('schedule');
+        return queryInterface.dropTable('schedules');
     },
 };

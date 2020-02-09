@@ -10,7 +10,7 @@ import {
 import { Op } from 'sequelize';
 import Appointment from '../models/Appointment';
 
-class AvailableController {
+class AvailabilityController {
     async index(req, res) {
         const { date } = req.query;
         if (!date) return res.status(422).json({ error: 'Invalid date' });
@@ -29,6 +29,7 @@ class AvailableController {
                 },
             },
         });
+
         const shchedule = [
             '08:00',
             '09:00',
@@ -61,4 +62,4 @@ class AvailableController {
     }
 }
 
-export default new AvailableController();
+export default new AvailabilityController();

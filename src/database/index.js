@@ -6,8 +6,9 @@ import Appointment from '../app/models/Appointment';
 import File from '../app/models/File';
 import Specialty from '../app/models/Specialty';
 import Patient from '../app/models/Patient';
+import Schedule from '../app/models/Schedule';
 
-const models = [User, File, Appointment, Specialty, Patient];
+const models = [User, File, Appointment, Specialty, Patient, Schedule];
 
 class Database {
     constructor() {

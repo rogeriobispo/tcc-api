@@ -8,20 +8,22 @@ import SessionsValidator from './app/validators/session/sessionsValidations';
 import UserCreateValidation from './app/validators/users/UserCreateValidation';
 import UserUpdateValidation from './app/validators/users/UserUpdateValidation';
 import AppointmentCreateValidation from './app/validators/Appointment/AppointmentCreateValidation';
-import AvailebleDoctorValidation from './app/validators/Available/AvailebleDoctorValidation';
+import AvailabilityDoctorValidation from './app/validators/Availability/AvailabilityDoctorValidation';
 import SpecialtyCreateValidation from './app/validators/Specialty/SpecialtyCreateValidation';
 import PatientValidation from './app/validators/Patient/PatientValidation';
+import ScheduleCreateValidation from './app/validators/Schedule/ScheduleCreateValidation';
 
 import DoctorsController from './app/controller/DoctorsController';
 import SessionController from './app/controller/SessionController';
 import FileController from './app/controller/FileController';
 import AppointmentController from './app/controller/AppointmentController';
-import SchedulerController from './app/controller/SchedulerController';
+import SchedulerController from './app/controller/DoctorApointmentController';
 import NotificationController from './app/controller/NotificationController';
 import authenticated from './app/middlewares/auth';
-import AvailableController from './app/controller/AvailableController';
+import AvailabilityController from './app/controller/AvailabilityController';
 import SpecialtyController from './app/controller/SpecialtyController';
 import PatientController from './app/controller/PatientController';
+import ScheduleController from './app/controller/ScheduleController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -44,22 +46,26 @@ routes.get('/specialty', SpecialtyController.index);
 routes.post('/users', UserCreateValidation, UserController.store);
 routes.put('/users', UserUpdateValidation, UserController.update);
 
+routes.post('/schedule', ScheduleCreateValidation, ScheduleController.store);
+routes.delete('/schedule/:id', ScheduleController.delete);
+routes.get('/doctor/:id/schedules/', ScheduleController.index);
+
 routes.get('/patients/:id/appointments', PatientController.index);
 routes.post('/patients', PatientValidation, PatientController.store);
 routes.put('/patients', PatientValidation, PatientController.update);
 
-routes.get('/doctors', DoctorsController.index);
-
 routes.get(
-    '/doctors/:id/available',
-    AvailebleDoctorValidation,
-    AvailableController.index
+    '/doctors/:id/availability',
+    AvailabilityDoctorValidation,
+    AvailabilityController.index
 );
+
+routes.get('/doctors', DoctorsController.index);
+routes.get('/doctors/:id/appointments', SchedulerController.index);
 
 routes.get('/notifications', NotificationController.index);
 routes.put('/notifications/:id', NotificationController.update);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
-routes.get('/schedule', SchedulerController.index);
 export default routes;

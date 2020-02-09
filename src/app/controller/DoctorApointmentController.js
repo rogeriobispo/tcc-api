@@ -3,23 +3,23 @@ import { Op } from 'sequelize';
 import Appointment from '../models/Appointment';
 import User from '../models/User';
 
-class SchedulerController {
+class DoctorApointmentController {
     async index(req, res) {
         const { page = 1, size = 20 } = req.query;
 
-        const checkUserProvider = await User.findOne({
-            where: { id: req.userId, doctor: true },
+        const checkUserDoctor = await User.findOne({
+            where: { id: req.params.id, doctor: true },
         });
 
-        if (!checkUserProvider)
-            return res.status(422).json({ error: 'Usuário não é um médico' });
+        if (!checkUserDoctor)
+            return res.status(422).json({ error: 'Médico não encontrado' });
 
         const { date } = req.query;
         const parsedDate = parseISO(date);
 
         const appointments = await Appointment.findAll({
             where: {
-                doctor_id: req.userId,
+                doctor_id: req.params.id,
                 canceled_at: null,
                 date: {
                     [Op.between]: [
@@ -37,4 +37,4 @@ class SchedulerController {
     }
 }
 
-export default new SchedulerController();
+export default new DoctorApointmentController();
