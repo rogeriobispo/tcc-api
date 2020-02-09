@@ -53,7 +53,7 @@ class AvailabilityController {
 
             return {
                 time,
-                value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
+                date: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
                 avaialble:
                     isAfter(value, new Date()) &&
                     !appointments.find(ap => format(ap.date, 'HH:mm') === time),
