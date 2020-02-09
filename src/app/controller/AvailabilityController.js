@@ -6,13 +6,16 @@ import {
     setSeconds,
     format,
     isAfter,
+    getDay,
 } from 'date-fns';
 import { Op } from 'sequelize';
 import Appointment from '../models/Appointment';
+import Schedule from '../models/Schedule';
 
 class AvailabilityController {
     async index(req, res) {
         const { date } = req.query;
+
         if (!date) return res.status(422).json({ error: 'Invalid date' });
 
         const searchDate = Number(date);
@@ -30,20 +33,18 @@ class AvailabilityController {
             },
         });
 
-        const shchedule = [
-            '08:00',
-            '09:00',
-            '10:00',
-            '11:00',
-            '12:00',
-            '13:00',
-            '14:00',
-            '15:00',
-            '16:00',
-            '17:00',
-            '18:00',
-        ];
-        const avaialble = shchedule.map(time => {
+        const dayOfWeek = getDay(searchDate);
+        const schedules = await Schedule.findAll({
+            where: {
+                doctor_id: req.params.id,
+                day: Number(dayOfWeek),
+            },
+            attributes: ['schedule_time'],
+        });
+
+        const doctor_schedule = schedules.map(sc => sc.schedule_time);
+
+        const avaialble = doctor_schedule.map(time => {
             const [hour, minute] = time.split(':');
             const value = setSeconds(
                 setMinutes(setHours(searchDate, hour), minute),

@@ -17,7 +17,7 @@ import DoctorsController from './app/controller/DoctorsController';
 import SessionController from './app/controller/SessionController';
 import FileController from './app/controller/FileController';
 import AppointmentController from './app/controller/AppointmentController';
-import SchedulerController from './app/controller/DoctorApointmentController';
+import DoctorApointmentController from './app/controller/DoctorApointmentController';
 import NotificationController from './app/controller/NotificationController';
 import authenticated from './app/middlewares/auth';
 import AvailabilityController from './app/controller/AvailabilityController';
@@ -48,7 +48,6 @@ routes.put('/users', UserUpdateValidation, UserController.update);
 
 routes.post('/schedule', ScheduleCreateValidation, ScheduleController.store);
 routes.delete('/schedule/:id', ScheduleController.delete);
-routes.get('/doctor/:id/schedules/', ScheduleController.index);
 
 routes.get('/patients/:id/appointments', PatientController.index);
 routes.post('/patients', PatientValidation, PatientController.store);
@@ -61,7 +60,8 @@ routes.get(
 );
 
 routes.get('/doctors', DoctorsController.index);
-routes.get('/doctors/:id/appointments', SchedulerController.index);
+routes.get('/doctors/:id/appointments', DoctorApointmentController.index);
+routes.get('/doctor/:id/schedules/', ScheduleController.index);
 
 routes.get('/notifications', NotificationController.index);
 routes.put('/notifications/:id', NotificationController.update);

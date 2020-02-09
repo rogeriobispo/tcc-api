@@ -5,8 +5,8 @@ export default async (req, res, next) => {
         doctor_id: Yup.number().required(),
         day: Yup.number()
             .required()
-            .min(1)
-            .max(7),
+            .min(0)
+            .max(6),
         schedule_time: Yup.string()
             .required()
             .length(5)

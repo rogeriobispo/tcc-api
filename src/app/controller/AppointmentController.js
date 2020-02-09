@@ -32,7 +32,7 @@ class AppointmentController {
         if (isBefore(hourStart, new Date()))
             return res
                 .status(422)
-                .json({ error: 'Agendamento nos passado não é permitido' });
+                .json({ error: 'Agendamento no passado não é permitido' });
 
         const checkAvailability = await Appointment.findOne({
             where: {
