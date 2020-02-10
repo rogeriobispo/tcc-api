@@ -24,6 +24,7 @@ import AvailabilityController from './app/controller/AvailabilityController';
 import SpecialtyController from './app/controller/SpecialtyController';
 import PatientController from './app/controller/PatientController';
 import ScheduleController from './app/controller/ScheduleController';
+import MedicineController from './app/controller/MedicineController ';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -48,6 +49,10 @@ routes.put('/users', UserUpdateValidation, UserController.update);
 
 routes.post('/schedule', ScheduleCreateValidation, ScheduleController.store);
 routes.delete('/schedule/:id', ScheduleController.delete);
+
+routes.get('/medicines', MedicineController.index);
+routes.post('/medicines', MedicineController.store);
+routes.delete('/medicines/:id', MedicineController.delete);
 
 routes.get('/patients/:id/appointments', PatientController.index);
 routes.post('/patients', PatientValidation, PatientController.store);
