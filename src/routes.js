@@ -12,6 +12,7 @@ import AvailabilityDoctorValidation from './app/validators/Availability/Availabi
 import SpecialtyCreateValidation from './app/validators/Specialty/SpecialtyCreateValidation';
 import PatientValidation from './app/validators/Patient/PatientValidation';
 import ScheduleCreateValidation from './app/validators/Schedule/ScheduleCreateValidation';
+import MedicineCreateValidation from './app/validators/Medicine/MedicineCreateValidation';
 
 import DoctorsController from './app/controller/DoctorsController';
 import SessionController from './app/controller/SessionController';
@@ -51,7 +52,7 @@ routes.post('/schedule', ScheduleCreateValidation, ScheduleController.store);
 routes.delete('/schedule/:id', ScheduleController.delete);
 
 routes.get('/medicines', MedicineController.index);
-routes.post('/medicines', MedicineController.store);
+routes.post('/medicines', MedicineCreateValidation, MedicineController.store);
 routes.delete('/medicines/:id', MedicineController.delete);
 
 routes.get('/patients/:id/appointments', PatientController.index);
