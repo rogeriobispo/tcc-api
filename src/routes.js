@@ -13,6 +13,7 @@ import SpecialtyCreateValidation from './app/validators/Specialty/SpecialtyCreat
 import PatientValidation from './app/validators/Patient/PatientValidation';
 import ScheduleCreateValidation from './app/validators/Schedule/ScheduleCreateValidation';
 import MedicineCreateValidation from './app/validators/Medicine/MedicineCreateValidation';
+import PrescriptionCreateValidator from './app/validators/prescription/PrescriptionCreateValidator';
 
 import DoctorsController from './app/controller/DoctorsController';
 import SessionController from './app/controller/SessionController';
@@ -40,6 +41,8 @@ routes.post(
     AppointmentController.store
 );
 routes.delete('/appointments/:id', AppointmentController.delete);
+
+routes.post('/prescription', PrescriptionCreateValidator); // faltar criar model e controller
 
 routes.post('/specialty', SpecialtyCreateValidation, SpecialtyController.store);
 routes.put('/specialty/:id', SpecialtyController.update);
