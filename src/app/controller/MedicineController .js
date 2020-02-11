@@ -2,7 +2,7 @@ import Medicine from '../models/Medicine';
 
 class MedicineController {
     async index(_, res) {
-        const medicines = await Medicine.findAll();
+        const medicines = await Medicine.findAll({ where: { deleted: 0 } });
         res.json(medicines);
     }
 
@@ -30,7 +30,7 @@ class MedicineController {
                 .status(422)
                 .json({ error: 'Medicamento não localizada' });
 
-        await medicine.destroy();
+        await Medicine.softDelete({ where: { id } });
         return res.status(204).json();
     }
 }
