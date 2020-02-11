@@ -2,7 +2,7 @@ import Medicine from '../models/Medicine';
 
 class MedicineController {
     async index(_, res) {
-        const medicines = await Medicine.findAll({ where: { deleted: 0 } });
+        const medicines = await Medicine.findAll();
         res.json(medicines);
     }
 

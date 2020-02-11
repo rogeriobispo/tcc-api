@@ -14,6 +14,11 @@ class Medicine extends Model {
             },
             {
                 sequelize,
+                defaultScope: {
+                    where: {
+                        deleted: 0,
+                    },
+                },
             }
         );
         const options = { field: 'deleted', deleted: 1 };
