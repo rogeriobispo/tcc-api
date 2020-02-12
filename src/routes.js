@@ -27,6 +27,7 @@ import SpecialtyController from './app/controller/SpecialtyController';
 import PatientController from './app/controller/PatientController';
 import ScheduleController from './app/controller/ScheduleController';
 import MedicineController from './app/controller/MedicineController ';
+import AppointmentMedicineController from './app/controller/AppointmentMedicineController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -41,6 +42,11 @@ routes.post(
     AppointmentController.store
 );
 routes.delete('/appointments/:id', AppointmentController.delete);
+
+routes.post(
+    '/appointments/:ap_id/medicine/:medicine_id',
+    AppointmentMedicineController.store
+);
 
 routes.post('/prescription', PrescriptionCreateValidator); // faltar criar model e controller
 
