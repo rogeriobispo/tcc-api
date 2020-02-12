@@ -1,5 +1,11 @@
-import * as Yup from 'yup';
-import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns';
+import {
+    getDay,
+    startOfHour,
+    parseISO,
+    isBefore,
+    format,
+    subHours,
+} from 'date-fns';
 import pt from 'date-fns/locale/pt-BR';
 import Appointment from '../models/Appointment';
 import User from '../models/User';
@@ -7,6 +13,7 @@ import Patient from '../models/Patient';
 import Notification from '../schema/NotificationSchema';
 import Queue from '../../lib/Queue';
 import CancellatioMail from '../jobs/CancellationMail';
+import Schedule from '../models/Schedule';
 
 class AppointmentController {
     async store(req, res) {
@@ -41,6 +48,17 @@ class AppointmentController {
                 date: hourStart,
             },
         });
+        const schedule_time = format(hourStart, 'H:mm', { locale: pt });
+        const dayOfWeek = getDay(hourStart);
+
+        const doctorSchedule = await Schedule.findOne({
+            where: { doctor_id, schedule_time, day: dayOfWeek },
+        });
+        console.log(doctorSchedule);
+        if (!doctorSchedule)
+            return res
+                .status(400)
+                .json({ error: 'Este médico não tem agenda neste dia' });
 
         if (checkAvailability)
             return res

@@ -8,6 +8,7 @@ import Specialty from '../app/models/Specialty';
 import Patient from '../app/models/Patient';
 import Schedule from '../app/models/Schedule';
 import Medicine from '../app/models/Medicine';
+import Prescription from '../app/models/Prescriptions';
 
 const models = [
     User,
@@ -17,6 +18,7 @@ const models = [
     Patient,
     Schedule,
     Medicine,
+    Prescription,
 ];
 
 class Database {
