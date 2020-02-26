@@ -1,8 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
+import Cors from 'cors';
 import multerConfig from './config/multer';
-
-import UserController from './app/controller/UserController';
 
 import SessionsValidator from './app/validators/session/sessionsValidations';
 import UserCreateValidation from './app/validators/users/UserCreateValidation';
@@ -15,13 +14,13 @@ import ScheduleCreateValidation from './app/validators/Schedule/ScheduleCreateVa
 import MedicineCreateValidation from './app/validators/Medicine/MedicineCreateValidation';
 import PrescriptionCreateValidator from './app/validators/prescription/PrescriptionCreateValidator';
 
+import UserController from './app/controller/UserController';
 import DoctorsController from './app/controller/DoctorsController';
 import SessionController from './app/controller/SessionController';
 import FileController from './app/controller/FileController';
 import AppointmentController from './app/controller/AppointmentController';
 import DoctorApointmentController from './app/controller/DoctorApointmentController';
 import NotificationController from './app/controller/NotificationController';
-import authenticated from './app/middlewares/auth';
 import AvailabilityController from './app/controller/AvailabilityController';
 import SpecialtyController from './app/controller/SpecialtyController';
 import PatientController from './app/controller/PatientController';
@@ -29,12 +28,15 @@ import ScheduleController from './app/controller/ScheduleController';
 import MedicineController from './app/controller/MedicineController ';
 import PrescriptionController from './app/controller/PrescriptionController';
 
+import Authenticated from './app/middlewares/auth';
+
 const routes = new Router();
 const upload = multer(multerConfig);
 
+routes.use(Cors());
 routes.post('/sessions', SessionsValidator, SessionController.store);
 
-routes.use(authenticated);
+routes.use(Authenticated);
 
 routes.post(
     '/appointments',
