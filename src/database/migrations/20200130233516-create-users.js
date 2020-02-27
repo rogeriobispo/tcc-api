@@ -26,6 +26,7 @@ module.exports = {
             },
             roles: {
                 type: Sequelize.STRING,
+                defaultValue: '',
             },
             created_at: {
                 type: Sequelize.DATE,
