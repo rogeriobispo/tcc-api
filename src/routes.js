@@ -57,7 +57,8 @@ routes.put('/specialty/:id', SpecialtyController.update);
 routes.get('/specialty', SpecialtyController.index);
 
 routes.post('/users', UserCreateValidation, UserController.store);
-routes.put('/users', UserUpdateValidation, UserController.update);
+routes.put('/users/:id', UserUpdateValidation, UserController.update);
+routes.get('/users', UserController.index);
 
 routes.post('/schedule', ScheduleCreateValidation, ScheduleController.store);
 routes.delete('/schedule/:id', ScheduleController.delete);

@@ -1,7 +1,27 @@
 import Specialty from '../models/Specialty';
 import User from '../models/User';
+import File from '../models/File';
 
 class UserController {
+    async index(_, res) {
+        const user = await User.findAll({
+            attributes: [
+                'id',
+                'name',
+                'email',
+                'roles',
+                'created_at',
+                'updated_at',
+            ],
+            include: {
+                model: File,
+                as: 'avatar',
+                attributes: ['name', 'path', 'url'],
+            },
+        });
+        res.json(user);
+    }
+
     async store(req, res) {
         const { doctor, specialty_id } = req.body;
         const especialty = await Specialty.findByPk(specialty_id);
@@ -26,18 +46,16 @@ class UserController {
     }
 
     async update(req, res) {
-        const { email, old_password, confirm_password } = req.body;
-        const user = await User.findByPk(req.userId);
+        const { email } = req.body;
+        const user = await User.findByPk(req.params.id);
+        if (!user)
+            return res.status(404).json({ error: 'Usuario não localizado' });
 
         if (email && email !== user.email) {
             const userExists = await User.findOne({ where: { email } });
             if (userExists)
                 return res.status(422).json({ error: 'User already exists' });
         }
-
-        if (confirm_password && !(await user.checkPassword(old_password)))
-            return res.status(401).json({ error: 'Invalid Password' });
-
         const { id, name, doctor } = await user.update(req.body);
 
         return res.json({
