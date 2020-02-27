@@ -20,7 +20,6 @@ class SessionController {
 
         if (!(await user.checkPassword(password)))
             return res.status(401).json({ error: 'Wrong User/Password' });
-
         return res.json({
             user,
             token: jwt.sign({ user }, authConfig.secret, {

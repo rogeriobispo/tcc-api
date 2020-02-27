@@ -10,6 +10,9 @@ export default async (req, res, next) => {
             .required()
             .min(6),
         doctor: Yup.boolean().required(),
+        roles: Yup.string()
+            .length(4)
+            .required(),
         specialty_id: Yup.number().when('doctor', (doctor, field) => {
             return doctor ? field.required() : field.notRequired();
         }),
