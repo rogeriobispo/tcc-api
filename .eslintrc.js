@@ -20,7 +20,8 @@ module.exports = {
     },
     rules: {
         'prettier/prettier': 'error',
-        "class-methods-use-this": 0,
+        'class-methods-use-this': 0,
+        'camelcase': 0
 
     },
 };
