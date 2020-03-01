@@ -10,7 +10,7 @@ export default async (req, res, next) => {
             .required()
             .min(6),
         doctor: Yup.boolean().required(),
-        specialty_id: Yup.number().when('doctor', (doctor, field) => {
+        specialtyId: Yup.number().when('doctor', (doctor, field) => {
             return doctor ? field.required() : field.notRequired();
         }),
         crm: Yup.string().when('doctor', (doctor, field) => {
@@ -18,6 +18,7 @@ export default async (req, res, next) => {
         }),
     });
     try {
+        console.log(req.body);
         await schema.validate(req.body);
     } catch (erro) {
         return res.status(422).json(erro);
