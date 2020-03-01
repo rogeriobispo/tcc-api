@@ -25,7 +25,7 @@ class UserController {
     async store(req, res) {
         const { doctor, specialtyId } = req.body;
         const especialty = await Specialty.findByPk(specialtyId);
-        if (doctor && specialtyId !== 0 && !especialty)
+        if (doctor && !especialty)
             return res
                 .status(422)
                 .json({ error: 'Esta especialidade não existe' });
