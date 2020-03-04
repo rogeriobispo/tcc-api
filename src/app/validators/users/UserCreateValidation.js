@@ -15,7 +15,6 @@ export default async (req, res, next) => {
             .test('is-true', 'Password divergente', function (confirmPassword) {
                 return this.parent.password === confirmPassword;
             }),
-        roles: Yup.string().required('Faltando campo roles'),
         admin: Yup.boolean().required('Faltando campo admin'),
         doctor: Yup.boolean('Doctor deve ser um boolean').required(
             'Informar se é um doutor ou não'

@@ -3,6 +3,24 @@ import User from '../models/User';
 import File from '../models/File';
 
 class UserController {
+    async show(req, res) {
+        console.log(req.params.id);
+        const user = await User.findByPk(req.params.id, {
+            attributes: [
+                'id',
+                'name',
+                'email',
+                'doctor',
+                'crm',
+                'roles',
+                'specialty_id',
+            ],
+        });
+        if (user) res.status(200).json(user);
+
+        res.status(404);
+    }
+
     async index(_, res) {
         const user = await User.findAll({
             attributes: [
@@ -10,6 +28,8 @@ class UserController {
                 'name',
                 'email',
                 'roles',
+                'doctor',
+                'crm',
                 'created_at',
                 'updated_at',
             ],
@@ -23,26 +43,33 @@ class UserController {
     }
 
     async store(req, res) {
-        const { doctor, specialty_id } = req.body;
-        const especialty = await Specialty.findByPk(specialty_id);
-        if (doctor && !especialty)
-            return res
-                .status(422)
-                .json({ errors: 'Esta especialidade não existe' });
+        try {
+            const { doctor, specialty_id } = req.body;
 
-        const userExists = await User.findOne({
-            where: { email: req.body.email },
-        });
-        if (userExists)
-            return res.status(400).json({ errors: 'Email já utilizado' });
-        const user = await User.create(req.body);
-        const { id, name, email, provider } = user;
-        return res.json({
-            id,
-            name,
-            email,
-            provider,
-        });
+            const especialty = await Specialty.findByPk(specialty_id);
+            if (!doctor) req.body.specialty_id = null;
+
+            if (doctor && !especialty)
+                return res
+                    .status(422)
+                    .json({ errors: 'Esta especialidade não existe' });
+
+            const userExists = await User.findOne({
+                where: { email: req.body.email },
+            });
+            if (userExists)
+                return res.status(400).json({ errors: 'Email já utilizado' });
+            const user = await User.create(req.body);
+            const { id, name, email, provider } = user;
+            return res.json({
+                id,
+                name,
+                email,
+                provider,
+            });
+        } catch (error) {
+            return res.status(422).json({ errors: 'Erro no banco de dados' });
+        }
     }
 
     async update(req, res) {
