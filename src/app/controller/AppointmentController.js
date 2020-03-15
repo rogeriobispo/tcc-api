@@ -7,6 +7,7 @@ import {
     subHours,
 } from 'date-fns';
 import pt from 'date-fns/locale/pt-BR';
+import File from '../models/File';
 import Appointment from '../models/Appointment';
 import User from '../models/User';
 import Patient from '../models/Patient';
@@ -16,6 +17,37 @@ import CancellatioMail from '../jobs/CancellationMail';
 import Schedule from '../models/Schedule';
 
 class AppointmentController {
+    async index(req, res) {
+        const { page = 1, size = 20 } = req.query;
+        const { id: patient_id } = req.params;
+
+        const appointments = await Appointment.findAll({
+            where: {
+                patient_id,
+                canceled_at: null,
+            },
+            limit: size,
+            offset: (page - 1) * size,
+            order: ['date'],
+            attributes: ['id', 'date', 'past', 'cancelable'],
+            include: [
+                {
+                    model: Patient,
+                    as: 'patient',
+                    attributes: ['id', 'name'],
+                    include: [
+                        {
+                            model: File,
+                            as: 'avatar',
+                            attributes: ['id', 'path', 'url'],
+                        },
+                    ],
+                },
+            ],
+        });
+        return res.json(appointments);
+    }
+
     async store(req, res) {
         const { doctor_id, date, patient_id } = req.body;
 

@@ -4,7 +4,6 @@ import File from '../models/File';
 
 class UserController {
     async show(req, res) {
-        console.log(req.params.id);
         const user = await User.findByPk(req.params.id, {
             attributes: [
                 'id',

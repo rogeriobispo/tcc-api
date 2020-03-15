@@ -19,11 +19,11 @@ class ScheduleController {
         const [, minuto] = schedule_time.split(':');
         if (!['00', '30'].includes(minuto))
             return res.status(422).json({
-                error: 'O minuto da agenda deve ser de 30 ou 00 minuto',
+                errors: 'O minuto da agenda deve ser de 30 ou 00 minuto',
             });
 
         if (!checkUserDoctor)
-            return res.status(422).json({ error: 'Médico não encontrado' });
+            return res.status(422).json({ errors: 'Médico não encontrado' });
 
         const checkSchedule = await Schedule.findOne({
             where: { doctor_id, day, schedule_time },

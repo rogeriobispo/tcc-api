@@ -5,7 +5,7 @@ import User from '../models/User';
 
 class DoctorApointmentController {
     async index(req, res) {
-        const { page = 1, size = 20 } = req.query;
+        // const { page = 1, size = 20 } = req.query;
 
         const checkUserDoctor = await User.findOne({
             where: { id: req.params.id, doctor: true },
@@ -28,8 +28,8 @@ class DoctorApointmentController {
                     ],
                 },
             },
-            limit: size,
-            offset: (page - 1) * size,
+            // limit: size,
+            // offset: (page - 1) * size,
             order: ['date'],
         });
 

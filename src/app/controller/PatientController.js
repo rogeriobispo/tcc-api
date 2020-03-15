@@ -1,37 +1,44 @@
 import Patient from '../models/Patient';
-import Appointment from '../models/Appointment';
 import File from '../models/File';
 
 class PatientController {
-    async index(req, res) {
-        const { page = 1, size = 20 } = req.query;
-        const { id: patient_id } = req.params;
-
-        const appointments = await Appointment.findAll({
-            where: {
-                patient_id,
-                canceled_at: null,
+    async index(_, res) {
+        const patients = await Patient.findAll({
+            attributes: [
+                'id',
+                'document',
+                'age',
+                'name',
+                'email',
+                'cel',
+                'phone',
+                'created_at',
+            ],
+            include: {
+                model: File,
+                as: 'avatar',
+                attributes: ['name', 'path', 'url'],
             },
-            limit: size,
-            offset: (page - 1) * size,
-            order: ['date'],
-            attributes: ['id', 'date', 'past', 'cancelable'],
-            include: [
-                {
-                    model: Patient,
-                    as: 'patient',
-                    attributes: ['id', 'name'],
-                    include: [
-                        {
-                            model: File,
-                            as: 'avatar',
-                            attributes: ['id', 'path', 'url'],
-                        },
-                    ],
-                },
+        });
+        res.status(200).json(patients);
+    }
+
+    async show(req, res) {
+        const user = await Patient.findByPk(req.params.id, {
+            attributes: [
+                'id',
+                'document',
+                'age',
+                'name',
+                'email',
+                'cel',
+                'phone',
+                'created_at',
             ],
         });
-        return res.json(appointments);
+        if (user) res.status(200).json(user);
+
+        res.status(404);
     }
 
     async store(req, res) {
@@ -39,9 +46,7 @@ class PatientController {
             where: { document: req.body.document },
         });
         if (patientExists)
-            return res
-                .status(400)
-                .json({ error: 'Paciente Já existe na base' });
+            return res.status(400).json({ errors: 'Paciente Já existe' });
 
         const patient = await Patient.create(req.body);
         const { id, name, document, age } = patient;
@@ -60,7 +65,7 @@ class PatientController {
         if (!patient)
             return res
                 .status(422)
-                .json({ error: 'Não existe pasciente com este documento' });
+                .json({ errors: 'Não existe pasciente com este documento' });
 
         const { id, name, age } = await patient.update(req.body);
 

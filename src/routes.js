@@ -54,6 +54,7 @@ routes.post('/prescription', PrescriptionCreateValidator); // faltar criar model
 
 routes.post('/specialty', SpecialtyCreateValidation, SpecialtyController.store);
 routes.put('/specialty/:id', SpecialtyController.update);
+routes.get('/specialty/:id', SpecialtyController.show);
 routes.get('/specialty', SpecialtyController.index);
 
 routes.post('/users', UserCreateValidation, UserController.store);
@@ -66,9 +67,17 @@ routes.delete('/schedule/:id', ScheduleController.delete);
 
 routes.get('/medicines', MedicineController.index);
 routes.post('/medicines', MedicineCreateValidation, MedicineController.store);
+routes.get('/medicines/:id', MedicineController.show);
 routes.delete('/medicines/:id', MedicineController.delete);
+routes.put(
+    '/medicines/:id',
+    MedicineCreateValidation,
+    MedicineController.update
+);
 
-routes.get('/patients/:id/appointments', PatientController.index);
+routes.get('/patients/:id/appointments', AppointmentController.index);
+routes.get('/patients', PatientController.index);
+routes.get('/patients/:id', PatientController.show);
 routes.post('/patients', PatientValidation, PatientController.store);
 routes.put('/patients', PatientValidation, PatientController.update);
 

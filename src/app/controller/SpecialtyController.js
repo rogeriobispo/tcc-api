@@ -1,9 +1,18 @@
 import Specialty from '../models/Specialty';
 
 class UserController {
-    async index(req, res) {
-        const especialties = await Specialty.findAll();
+    async index(_, res) {
+        const especialties = await Specialty.findAll({
+            attributes: ['id', 'name', 'created_at'],
+        });
         return res.json(especialties);
+    }
+
+    async show(req, res) {
+        const especialty = await Specialty.findByPk(req.params.id);
+        if (!especialty)
+            res.status(404).json({ errors: 'Especialidade não existe' });
+        return res.json(especialty);
     }
 
     async store(req, res) {
@@ -12,7 +21,7 @@ class UserController {
         });
 
         if (specialtyExists)
-            return res.status(400).json({ error: 'Specialty already exists' });
+            return res.status(400).json({ errors: 'Especialidade ja existe' });
 
         const specialty = await Specialty.create(req.body);
 
@@ -30,8 +39,8 @@ class UserController {
             where: { name: newName },
         });
         if (specialtyExists)
-            return res.status(422).json({ error: 'Specialty already exists' });
-        console.log(req.params.id);
+            return res.status(422).json({ errors: 'Especialidade ja existe' });
+
         const specialty = await Specialty.findByPk(req.params.id);
 
         const { id, name } = await specialty.update(req.body);
