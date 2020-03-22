@@ -6,6 +6,7 @@ import {
     format,
     subHours,
 } from 'date-fns';
+import { QueryTypes } from 'sequelize';
 import pt from 'date-fns/locale/pt-BR';
 import File from '../models/File';
 import Appointment from '../models/Appointment';
@@ -50,12 +51,12 @@ class AppointmentController {
 
     async store(req, res) {
         const { doctor_id, date, patient_id } = req.body;
-
+        console.log(doctor_id, date, patient_id);
         const patient = await Patient.findOne({
             where: { id: patient_id },
         });
         if (!patient)
-            return res.status(422).json({ error: 'Paciente não localizado' });
+            return res.status(422).json({ errors: 'Paciente não localizado' });
 
         const isDoctor = await User.findOne({
             where: { id: doctor_id, doctor: true },
@@ -64,14 +65,14 @@ class AppointmentController {
         if (!isDoctor)
             return res
                 .status(422)
-                .json({ error: 'Somente pode-se agendar com médicos' });
+                .json({ errors: 'Somente pode-se agendar com médicos' });
 
         const hourStart = startOfHour(parseISO(date));
 
         if (isBefore(hourStart, new Date()))
             return res
                 .status(422)
-                .json({ error: 'Agendamento no passado não é permitido' });
+                .json({ errors: 'Agendamento no passado não é permitido' });
 
         const checkAvailability = await Appointment.findOne({
             where: {
@@ -83,14 +84,27 @@ class AppointmentController {
         const schedule_time = format(hourStart, 'H:mm', { locale: pt });
         const dayOfWeek = getDay(hourStart);
 
-        const doctorSchedule = await Schedule.findOne({
-            where: { doctor_id, schedule_time, day: dayOfWeek },
-        });
-        console.log(doctorSchedule);
+        const doctorSchedule = Schedule.sequelize.query(
+            `SELECT id, doctor_id, "day", schedule_time, created_at, updated_at
+            FROM public.schedules
+            where doctor_id = :doctor and schedule_time = :time and day = :day limit 1`,
+            {
+                replacements: {
+                    doctor: doctor_id,
+                    time: dayOfWeek,
+                    day: schedule_time,
+                },
+                type: Schedule.sequelize.QueryTypes.SELECT,
+            }
+        );
+        // findOne({
+        // where: { day: dayOfWeek, doctor_id, schedule_time },
+        // });
+
         if (!doctorSchedule)
             return res
                 .status(400)
-                .json({ error: 'Este médico não tem agenda neste dia' });
+                .json({ errors: 'Este médico não tem agenda neste dia' });
 
         if (checkAvailability)
             return res

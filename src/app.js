@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import * as Sentry from '@sentry/node';
+// import * as Sentry from '@sentry/node';
 import Youch from 'youch';
 import 'express-async-errors';
 import routes from './routes';

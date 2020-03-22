@@ -30,10 +30,6 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: true,
             },
-            medicines_name: {
-                type: Sequelize.STRING,
-                allowNull: true,
-            },
             canceled_at: {
                 type: Sequelize.DATE,
             },

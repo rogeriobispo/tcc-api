@@ -89,7 +89,7 @@ routes.get(
 
 routes.get('/doctors', DoctorsController.index);
 routes.get('/doctors/:id/appointments', DoctorApointmentController.index);
-routes.get('/doctor/:id/schedules/', ScheduleController.index);
+routes.get('/doctors/:id/schedules/', ScheduleController.index);
 
 routes.get('/notifications', NotificationController.index);
 routes.put('/notifications/:id', NotificationController.update);

@@ -1,4 +1,5 @@
-import { startOfDay, endOfDay, parseISO } from 'date-fns';
+/* eslint-disable no-param-reassign */
+import { startOfDay, endOfDay, parseISO, subHours } from 'date-fns';
 import { Op } from 'sequelize';
 import Appointment from '../models/Appointment';
 import User from '../models/User';
@@ -13,7 +14,6 @@ class DoctorApointmentController {
 
         if (!checkUserDoctor)
             return res.status(422).json({ error: 'Médico não encontrado' });
-
         const { date } = req.query;
         const parsedDate = parseISO(date);
 
@@ -31,6 +31,11 @@ class DoctorApointmentController {
             // limit: size,
             // offset: (page - 1) * size,
             order: ['date'],
+        });
+
+        // eslint-disable-next-line array-callback-return
+        appointments.map(ap => {
+            ap.date = subHours(ap.date, 3);
         });
 
         return res.json(appointments);
