@@ -6,15 +6,13 @@ import {
     format,
     subHours,
 } from 'date-fns';
-import { QueryTypes } from 'sequelize';
+
 import pt from 'date-fns/locale/pt-BR';
 import File from '../models/File';
 import Appointment from '../models/Appointment';
 import User from '../models/User';
 import Patient from '../models/Patient';
 import Notification from '../schema/NotificationSchema';
-import Queue from '../../lib/Queue';
-import CancellatioMail from '../jobs/CancellationMail';
 import Schedule from '../models/Schedule';
 
 class AppointmentController {
@@ -97,9 +95,6 @@ class AppointmentController {
                 type: Schedule.sequelize.QueryTypes.SELECT,
             }
         );
-        // findOne({
-        // where: { day: dayOfWeek, doctor_id, schedule_time },
-        // });
 
         if (!doctorSchedule)
             return res
@@ -159,7 +154,6 @@ class AppointmentController {
 
         appointment.canceled_at = new Date();
         await appointment.save();
-        await Queue.add(CancellatioMail.key, { appointment });
         return res.json(appointment);
     }
 }
