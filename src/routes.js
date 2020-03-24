@@ -20,7 +20,6 @@ import SessionController from './app/controller/SessionController';
 import FileController from './app/controller/FileController';
 import AppointmentController from './app/controller/AppointmentController';
 import DoctorApointmentController from './app/controller/DoctorApointmentController';
-import NotificationController from './app/controller/NotificationController';
 import AvailabilityController from './app/controller/AvailabilityController';
 import SpecialtyController from './app/controller/SpecialtyController';
 import PatientController from './app/controller/PatientController';
@@ -90,9 +89,6 @@ routes.get(
 routes.get('/doctors', DoctorsController.index);
 routes.get('/doctors/:id/appointments', DoctorApointmentController.index);
 routes.get('/doctors/:id/schedules/', ScheduleController.index);
-
-routes.get('/notifications', NotificationController.index);
-routes.put('/notifications/:id', NotificationController.update);
 
 routes.post('/files', upload.single('file'), FileController.store);
 

@@ -12,12 +12,10 @@ import File from '../models/File';
 import Appointment from '../models/Appointment';
 import User from '../models/User';
 import Patient from '../models/Patient';
-import Notification from '../schema/NotificationSchema';
 import Schedule from '../models/Schedule';
 
 class AppointmentController {
     async index(req, res) {
-        const { page = 1, size = 20 } = req.query;
         const { id: patient_id } = req.params;
 
         const appointments = await Appointment.findAll({
@@ -25,8 +23,7 @@ class AppointmentController {
                 patient_id,
                 canceled_at: null,
             },
-            limit: size,
-            offset: (page - 1) * size,
+
             order: ['date'],
             attributes: ['id', 'date', 'past', 'cancelable'],
             include: [
@@ -42,6 +39,12 @@ class AppointmentController {
                         },
                     ],
                 },
+
+                {
+                    model: User,
+                    as: 'doctor',
+                    attributes: ['id', 'name'],
+                },
             ],
         });
         return res.json(appointments);
@@ -49,7 +52,6 @@ class AppointmentController {
 
     async store(req, res) {
         const { doctor_id, date, patient_id } = req.body;
-        console.log(doctor_id, date, patient_id);
         const patient = await Patient.findOne({
             where: { id: patient_id },
         });
@@ -108,19 +110,9 @@ class AppointmentController {
         const appointment = await Appointment.create({
             patient_id,
             doctor_id,
-            date: hourStart,
+            date: req.body.date,
         });
 
-        const formatedDate = format(
-            hourStart,
-            "'dia' dd 'de' MMMM', às' H:mm'h'",
-            { locale: pt }
-        );
-
-        await Notification.create({
-            content: `Novo agendamento de ${patient.name} para ${formatedDate}`,
-            user: doctor_id,
-        });
         return res.json({ appointment });
     }
 

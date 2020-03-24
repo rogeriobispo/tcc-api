@@ -1,5 +1,4 @@
 import Sequelize from 'sequelize';
-import mongoose from 'mongoose';
 import dataBaseConfig from '../config/database';
 import User from '../app/models/User';
 import Appointment from '../app/models/Appointment';
@@ -24,7 +23,6 @@ const models = [
 class Database {
     constructor() {
         this.init();
-        this.mongo();
     }
 
     init() {
@@ -35,13 +33,6 @@ class Database {
                 model =>
                     model.associate && model.associate(this.connection.models)
             );
-    }
-
-    mongo() {
-        this.mongooseconnection = mongoose.connect(
-            'mongodb://localhost:27017/clinicalCare',
-            { useNewUrlParser: true, useFindAndModify: true }
-        );
     }
 }
 
