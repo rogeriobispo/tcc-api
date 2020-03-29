@@ -11,7 +11,7 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false,
             },
-            patients_id: {
+            patient_id: {
                 type: Sequelize.INTEGER,
                 references: { model: 'patients', key: 'id' },
                 onUpdate: 'CASCADE',
@@ -20,7 +20,7 @@ module.exports = {
             },
             results: {
                 type: Sequelize.STRING,
-                allowNull: false,
+                allowNull: true,
             },
             image_result: {
                 type: Sequelize.INTEGER,

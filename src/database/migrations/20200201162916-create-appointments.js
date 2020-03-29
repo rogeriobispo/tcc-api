@@ -26,7 +26,7 @@ module.exports = {
                 onDelete: 'SET NULL',
                 allowNull: true,
             },
-            descriptions: {
+            description: {
                 type: Sequelize.INTEGER,
                 allowNull: true,
             },

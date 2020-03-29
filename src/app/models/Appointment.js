@@ -5,6 +5,10 @@ class Appointment extends Model {
     static init(sequelize) {
         super.init(
             {
+                status: Sequelize.BOOLEAN,
+                prescription: Sequelize.BOOLEAN,
+                description: Sequelize.STRING,
+                type: Sequelize.STRING,
                 date: Sequelize.DATE,
 
                 canceled_at: Sequelize.DATE,

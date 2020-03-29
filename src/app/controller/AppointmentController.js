@@ -10,11 +10,48 @@ import {
 import pt from 'date-fns/locale/pt-BR';
 import File from '../models/File';
 import Appointment from '../models/Appointment';
+import Prescription from '../models/Prescriptions';
+import Medicine from '../models/Medicine';
 import User from '../models/User';
 import Patient from '../models/Patient';
 import Schedule from '../models/Schedule';
 
 class AppointmentController {
+    async show(req, res) {
+        const { id } = req.params;
+        const prescription = await Prescription.findAll({
+            where: {
+                appointment_id: id,
+            },
+            include: [
+                {
+                    model: Appointment,
+                    as: 'appointment',
+                    attributes: ['id', 'description'],
+                    include: [
+                        {
+                            model: User,
+                            as: 'doctor',
+                            attributes: ['name'],
+                        },
+                        {
+                            model: Patient,
+                            as: 'patient',
+                            attributes: ['name'],
+                        },
+                    ],
+                },
+                {
+                    model: Medicine,
+                    as: 'medicine',
+                    attributes: ['id', 'name', 'factory'],
+                },
+            ],
+            attributes: ['appointment_id', 'medicine_id'],
+        });
+        res.json(prescription);
+    }
+
     async index(req, res) {
         const { id: patient_id } = req.params;
 
@@ -106,7 +143,7 @@ class AppointmentController {
         if (checkAvailability)
             return res
                 .status(422)
-                .json({ error: 'A data de agendamento não esta disponivel' });
+                .json({ errors: 'A data de agendamento não esta disponivel' });
         const appointment = await Appointment.create({
             patient_id,
             doctor_id,
@@ -116,32 +153,30 @@ class AppointmentController {
         return res.json({ appointment });
     }
 
-    async delete(req, res) {
-        const appointment = await Appointment.findByPk(req.params.id, {
-            include: [
-                {
-                    model: User,
-                    as: 'doctor',
-                    attributes: ['name', 'email'],
-                },
-                {
-                    model: User,
-                    as: 'user',
-                    attributes: ['name'],
-                },
-            ],
+    async update(req, res) {
+        const { body } = req;
+        const appointment = await Appointment.findOne({
+            where: { id: req.params.id },
         });
+        if (!appointment)
+            return res
+                .status(422)
+                .json({ errors: 'Agendamento não localizado' });
 
-        if (appointment.user_id !== req.userId)
-            return res.status(422).json({
-                erro: "You don't have permission to cancel this appointment",
-            });
+        const updatedAppointment = await appointment.update(body);
+
+        return res.json(updatedAppointment);
+    }
+
+    async delete(req, res) {
+        const appointment = await Appointment.findByPk(req.params.id);
 
         const datewithSub = subHours(appointment.date, 2);
 
         if (isBefore(datewithSub, new Date()))
             return res.status(422).json({
-                erro: 'You can only cancel appointment 2 hours in advance',
+                erros:
+                    'Você só pode cancelar agendamento com duas horas de antecedencia',
             });
 
         appointment.canceled_at = new Date();

@@ -12,7 +12,7 @@ import SpecialtyCreateValidation from './app/validators/Specialty/SpecialtyCreat
 import PatientValidation from './app/validators/Patient/PatientValidation';
 import ScheduleCreateValidation from './app/validators/Schedule/ScheduleCreateValidation';
 import MedicineCreateValidation from './app/validators/Medicine/MedicineCreateValidation';
-import PrescriptionCreateValidator from './app/validators/prescription/PrescriptionCreateValidator';
+import ExamsCreateValidation from './app/validators/Exams/ExamsCreateValidation';
 
 import UserController from './app/controller/UserController';
 import DoctorsController from './app/controller/DoctorsController';
@@ -26,6 +26,7 @@ import PatientController from './app/controller/PatientController';
 import ScheduleController from './app/controller/ScheduleController';
 import MedicineController from './app/controller/MedicineController ';
 import PrescriptionController from './app/controller/PrescriptionController';
+import ExamController from './app/controller/ExamController';
 
 import Authenticated from './app/middlewares/auth';
 
@@ -44,12 +45,13 @@ routes.post(
 );
 routes.delete('/appointments/:id', AppointmentController.delete);
 
+routes.put('/appointments/:id', AppointmentController.update);
+routes.get('/appointments/:id', AppointmentController.show);
+
 routes.post(
     '/appointments/:appointment_id/medicine/:medicine_id',
     PrescriptionController.store
 );
-
-routes.post('/prescription', PrescriptionCreateValidator); // faltar criar model e controller
 
 routes.post('/specialty', SpecialtyCreateValidation, SpecialtyController.store);
 routes.put('/specialty/:id', SpecialtyController.update);
@@ -77,6 +79,7 @@ routes.put(
 routes.get('/patients/:id/appointments', AppointmentController.index);
 routes.get('/patients', PatientController.index);
 routes.get('/patients/:id', PatientController.show);
+
 routes.post('/patients', PatientValidation, PatientController.store);
 routes.put('/patients', PatientValidation, PatientController.update);
 
@@ -89,6 +92,8 @@ routes.get(
 routes.get('/doctors', DoctorsController.index);
 routes.get('/doctors/:id/appointments', DoctorApointmentController.index);
 routes.get('/doctors/:id/schedules/', ScheduleController.index);
+
+routes.post('/exams', ExamsCreateValidation, ExamController.store);
 
 routes.post('/files', upload.single('file'), FileController.store);
 

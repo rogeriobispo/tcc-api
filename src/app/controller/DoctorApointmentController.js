@@ -9,7 +9,7 @@ import File from '../models/File';
 class DoctorApointmentController {
     async index(req, res) {
         // const { page = 1, size = 20 } = req.query;
-        const { filter } = req.query;
+        const { filter, status = false, prescription = false } = req.query;
         const checkUserDoctor = await User.findOne({
             where: { id: req.params.id, doctor: true },
         });
@@ -25,6 +25,8 @@ class DoctorApointmentController {
             filterDate = {
                 doctor_id: req.params.id,
                 canceled_at: null,
+                status,
+                prescription,
                 date: {
                     [Op.between]: [
                         startOfDay(parsedDate),
