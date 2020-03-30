@@ -6,6 +6,7 @@ class Exam extends Model {
             {
                 patient_id: Sequelize.INTEGER,
                 appointment_id: Sequelize.INTEGER,
+                image_result: Sequelize.INTEGER,
                 name: Sequelize.STRING,
                 with_doctor: Sequelize.BOOLEAN,
                 with_patient: Sequelize.BOOLEAN,
@@ -20,7 +21,14 @@ class Exam extends Model {
     }
 
     static associate(models) {
-        this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' });
+        this.belongsTo(models.File, {
+            foreignKey: 'image_result',
+            as: 'imageResult',
+        });
+        this.belongsTo(models.Patient, {
+            foreignKey: 'patient_id',
+            as: 'patient',
+        });
         this.belongsTo(models.Appointment, {
             foreignKey: 'appointment_id',
             as: 'appointment',

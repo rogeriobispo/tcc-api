@@ -15,6 +15,7 @@ import Medicine from '../models/Medicine';
 import User from '../models/User';
 import Patient from '../models/Patient';
 import Schedule from '../models/Schedule';
+import Exam from '../models/Exam';
 
 class AppointmentController {
     async show(req, res) {
@@ -45,6 +46,11 @@ class AppointmentController {
                     model: Medicine,
                     as: 'medicine',
                     attributes: ['id', 'name', 'factory'],
+                },
+                {
+                    model: Exam,
+                    as: 'exams',
+                    attributes: ['id', 'name'],
                 },
             ],
             attributes: ['appointment_id', 'medicine_id'],

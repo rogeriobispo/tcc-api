@@ -27,6 +27,7 @@ import ScheduleController from './app/controller/ScheduleController';
 import MedicineController from './app/controller/MedicineController ';
 import PrescriptionController from './app/controller/PrescriptionController';
 import ExamController from './app/controller/ExamController';
+import AppointmentExamController from './app/controller/AppointmentExamController';
 
 import Authenticated from './app/middlewares/auth';
 
@@ -47,6 +48,7 @@ routes.delete('/appointments/:id', AppointmentController.delete);
 
 routes.put('/appointments/:id', AppointmentController.update);
 routes.get('/appointments/:id', AppointmentController.show);
+routes.get('/appointments/:id/exams', AppointmentExamController.show);
 
 routes.post(
     '/appointments/:appointment_id/medicine/:medicine_id',

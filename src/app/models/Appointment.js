@@ -9,6 +9,7 @@ class Appointment extends Model {
                 prescription: Sequelize.BOOLEAN,
                 description: Sequelize.STRING,
                 type: Sequelize.STRING,
+                exam: Sequelize.BOOLEAN,
                 date: Sequelize.DATE,
 
                 canceled_at: Sequelize.DATE,
