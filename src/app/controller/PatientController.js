@@ -76,6 +76,15 @@ class PatientController {
             age,
         });
     }
+
+    async delete(req, res) {
+        const patient = await Patient.findByPk(req.params.id);
+
+        if (!patient)
+            return res.status(404).json({ errors: 'Paciente não localizado' });
+        await patient.destroy();
+        return res.status(204);
+    }
 }
 
 export default new PatientController();

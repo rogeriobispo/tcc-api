@@ -83,7 +83,7 @@ routes.put(
 routes.get('/patients/:id/appointments', AppointmentController.index);
 routes.get('/patients', PatientController.index);
 routes.get('/patients/:id', PatientController.show);
-
+routes.delete('/patients/:id', PatientController.delete);
 routes.post('/patients', PatientValidation, PatientController.store);
 routes.put('/patients', PatientValidation, PatientController.update);
 
