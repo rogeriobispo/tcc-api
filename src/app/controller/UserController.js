@@ -91,6 +91,15 @@ class UserController {
             doctor,
         });
     }
+
+    async delete(req, res) {
+        const user = await User.findByPk(req.params.id);
+
+        if (!user)
+            return res.status(404).json({ errors: 'Usuário não localizado' });
+        await user.destroy();
+        return res.status(204);
+    }
 }
 
 export default new UserController();

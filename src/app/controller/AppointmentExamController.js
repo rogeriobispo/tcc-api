@@ -7,10 +7,11 @@ import User from '../models/User';
 class AppointmentExamController {
     async show(req, res) {
         const apiId = req.params.id;
-        console.log(apiId);
+        const { finished = false } = req.query;
         const exam = await Exam.findAll({
             where: {
                 appointment_id: apiId,
+                finished,
             },
             include: [
                 {

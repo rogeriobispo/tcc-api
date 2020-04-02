@@ -10,6 +10,7 @@ class Exam extends Model {
                 name: Sequelize.STRING,
                 with_doctor: Sequelize.BOOLEAN,
                 with_patient: Sequelize.BOOLEAN,
+                finished: Sequelize.BOOLEAN,
                 results: Sequelize.STRING,
             },
             {

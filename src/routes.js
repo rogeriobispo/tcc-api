@@ -36,6 +36,8 @@ const upload = multer(multerConfig);
 
 routes.use(Cors());
 routes.post('/sessions', SessionsValidator, SessionController.store);
+routes.get('/appointments/:id/exams', AppointmentExamController.show);
+routes.post('/files', upload.single('file'), FileController.store);
 
 routes.use(Authenticated);
 
@@ -48,7 +50,6 @@ routes.delete('/appointments/:id', AppointmentController.delete);
 
 routes.put('/appointments/:id', AppointmentController.update);
 routes.get('/appointments/:id', AppointmentController.show);
-routes.get('/appointments/:id/exams', AppointmentExamController.show);
 
 routes.post(
     '/appointments/:appointment_id/medicine/:medicine_id',
@@ -63,6 +64,7 @@ routes.get('/specialty', SpecialtyController.index);
 routes.post('/users', UserCreateValidation, UserController.store);
 routes.put('/users/:id', UserUpdateValidation, UserController.update);
 routes.get('/users/:id', UserUpdateValidation, UserController.show);
+routes.delete('/users/:id', UserUpdateValidation, UserController.delete);
 routes.get('/users', UserController.index);
 
 routes.post('/schedule', ScheduleCreateValidation, ScheduleController.store);
@@ -96,7 +98,6 @@ routes.get('/doctors/:id/appointments', DoctorApointmentController.index);
 routes.get('/doctors/:id/schedules/', ScheduleController.index);
 
 routes.post('/exams', ExamsCreateValidation, ExamController.store);
-
-routes.post('/files', upload.single('file'), FileController.store);
+routes.put('/exams', ExamsCreateValidation, ExamController.update);
 
 export default routes;

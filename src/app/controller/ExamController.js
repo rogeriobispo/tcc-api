@@ -1,6 +1,4 @@
 /* eslint-disable no-param-reassign */
-import { startOfDay, endOfDay, parseISO, subHours } from 'date-fns';
-import { Op } from 'sequelize';
 import Appointment from '../models/Appointment';
 import Patient from '../models/Patient';
 import Exame from '../models/Exam';
@@ -31,6 +29,22 @@ class ExamController {
         const ex = await Exame.create(req.body);
 
         return res.json(ex);
+    }
+
+    async update(req, res) {
+        const examId = req.body.id;
+        const exam = await Exame.findOne({
+            where: {
+                id: examId,
+            },
+        });
+
+        if (!exam)
+            return res.status(422).json({ error: 'Exame não localizado' });
+
+        const examUpdated = await exam.update(req.body);
+
+        return res.json(examUpdated);
     }
 }
 
