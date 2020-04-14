@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Cors } from 'Cors';
+import Cors from 'cors';
 import multer from 'multer';
 import multerConfig from './config/multer';
 
