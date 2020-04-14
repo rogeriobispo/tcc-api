@@ -1,4 +1,4 @@
 import app from './app';
 
-app.listen(5000);
-console.log(`Server up on port 5000`);
+app.listen(process.env.PORT);
+console.log(`Server up on port ${process.env.PORT}`);
