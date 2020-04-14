@@ -35,7 +35,6 @@ import Authenticated from './app/middlewares/auth';
 const routes = new Router();
 const upload = multer(multerConfig);
 
-routes.use(Cors());
 routes.post('/sessions', SessionsValidator, SessionController.store);
 routes.get('/appointments/:id/exams', AppointmentExamController.show);
 routes.post('/files', upload.single('file'), FileController.store);
