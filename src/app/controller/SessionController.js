@@ -6,7 +6,6 @@ import authConfig from '../../config/auth';
 
 class SessionController {
     async store(req, res) {
-        console.log('chamou store');
         const { email, password } = req.body;
         const user = await User.findOne({
             include: {
@@ -22,7 +21,6 @@ class SessionController {
         if (!(await user.checkPassword(password)))
             return res.status(401).json({ error: 'Wrong User/Password' });
         return res.json({
-            user,
             token: jwt.sign({ user }, authConfig.secret, {
                 expiresIn: authConfig.expiresIn,
             }),
