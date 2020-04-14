@@ -4,12 +4,10 @@ import { Op } from 'sequelize';
 import Appointment from '../models/Appointment';
 import User from '../models/User';
 import Patient from '../models/Patient';
-import File from '../models/File';
 
 class DoctorApointmentController {
     async index(req, res) {
-        // const { page = 1, size = 20 } = req.query;
-        const { filter, status = false, prescription = false } = req.query;
+        const { filter, finished = false, prescription = false } = req.query;
         const checkUserDoctor = await User.findOne({
             where: { id: req.params.id, doctor: true },
         });
@@ -25,7 +23,7 @@ class DoctorApointmentController {
             filterDate = {
                 doctor_id: req.params.id,
                 canceled_at: null,
-                status,
+                finished,
                 prescription,
                 date: {
                     [Op.between]: [
@@ -40,6 +38,19 @@ class DoctorApointmentController {
                 canceled_at: null,
             };
         }
+
+        if (filter === 'exams') {
+            filterDate = {
+                doctor_id: req.params.id,
+                canceled_at: null,
+                date: {
+                    [Op.between]: [
+                        startOfDay(parsedDate),
+                        endOfDay(parsedDate),
+                    ],
+                },
+            };
+        }
         const appointments = await Appointment.findAll({
             where: filterDate,
             // limit: size,
@@ -50,13 +61,6 @@ class DoctorApointmentController {
                     model: Patient,
                     as: 'patient',
                     attributes: ['id', 'name'],
-                    include: [
-                        {
-                            model: File,
-                            as: 'avatar',
-                            attributes: ['id', 'path', 'url'],
-                        },
-                    ],
                 },
 
                 {
@@ -65,11 +69,6 @@ class DoctorApointmentController {
                     attributes: ['id', 'name'],
                 },
             ],
-        });
-
-        // eslint-disable-next-line array-callback-return
-        appointments.map(ap => {
-            ap.date = subHours(ap.date, 3);
         });
 
         return res.json(appointments);

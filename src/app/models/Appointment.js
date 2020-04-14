@@ -5,7 +5,7 @@ class Appointment extends Model {
     static init(sequelize) {
         super.init(
             {
-                status: Sequelize.BOOLEAN,
+                finished: Sequelize.BOOLEAN,
                 prescription: Sequelize.BOOLEAN,
                 description: Sequelize.STRING,
                 type: Sequelize.STRING,
@@ -43,6 +43,15 @@ class Appointment extends Model {
         this.belongsTo(models.User, {
             foreignKey: 'doctor_id',
             as: 'doctor',
+        });
+
+        this.hasMany(models.Exam, {
+            as: 'exams',
+        });
+        this.belongsToMany(models.Medicine, {
+            through: 'prescriptions',
+            foreignKey: 'medicine_id',
+            as: 'medicines',
         });
     }
 }

@@ -25,6 +25,14 @@ class Medicine extends Model {
         sequelizeSoftDelete.softDelete(Medicine, options);
         return this;
     }
+
+    static associate(models) {
+        this.belongsToMany(models.Appointment, {
+            through: 'prescriptions',
+            foreignKey: 'appointment_id',
+            as: 'medicines',
+        });
+    }
 }
 
 export default Medicine;

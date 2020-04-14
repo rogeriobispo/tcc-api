@@ -4,8 +4,9 @@ class Prescription extends Model {
     static init(sequelize) {
         super.init(
             {
-                // medicine_id: Sequelize.INTEGER,
-                // appointment_id: Sequelize.INTEGER,
+                medicine_id: Sequelize.INTEGER,
+                appointment_id: Sequelize.INTEGER,
+                dose: Sequelize.STRING,
             },
             {
                 sequelize,

@@ -15,7 +15,6 @@ import Medicine from '../models/Medicine';
 import User from '../models/User';
 import Patient from '../models/Patient';
 import Schedule from '../models/Schedule';
-import Exam from '../models/Exam';
 
 class AppointmentController {
     async show(req, res) {
@@ -33,7 +32,7 @@ class AppointmentController {
                         {
                             model: User,
                             as: 'doctor',
-                            attributes: ['name'],
+                            attributes: ['name', 'crm'],
                         },
                         {
                             model: Patient,
@@ -47,13 +46,8 @@ class AppointmentController {
                     as: 'medicine',
                     attributes: ['id', 'name', 'factory'],
                 },
-                {
-                    model: Exam,
-                    as: 'exams',
-                    attributes: ['id', 'name'],
-                },
             ],
-            attributes: ['appointment_id', 'medicine_id'],
+            attributes: ['appointment_id', 'medicine_id', 'dose'],
         });
         res.json(prescription);
     }
@@ -161,6 +155,7 @@ class AppointmentController {
 
     async update(req, res) {
         const { body } = req;
+
         const appointment = await Appointment.findOne({
             where: { id: req.params.id },
         });

@@ -4,7 +4,7 @@ import Prescription from '../models/Prescriptions';
 
 class PrescriptionController {
     async store(req, res) {
-        const { medicine_id, appointment_id } = req.params;
+        const { medicine_id, appointment_id, dose } = req.body;
         const medicine = await Medicine.findOne({ where: { id: medicine_id } });
         if (!medicine)
             return res
@@ -20,6 +20,7 @@ class PrescriptionController {
         const prescription = await Prescription.create({
             medicine_id,
             appointment_id,
+            dose,
         });
 
         return res.status(201).json(prescription);

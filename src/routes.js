@@ -28,6 +28,7 @@ import MedicineController from './app/controller/MedicineController ';
 import PrescriptionController from './app/controller/PrescriptionController';
 import ExamController from './app/controller/ExamController';
 import AppointmentExamController from './app/controller/AppointmentExamController';
+import HistoricController from './app/controller/HistoricController';
 
 import Authenticated from './app/middlewares/auth';
 
@@ -52,13 +53,14 @@ routes.put('/appointments/:id', AppointmentController.update);
 routes.get('/appointments/:id', AppointmentController.show);
 
 routes.post(
-    '/appointments/:appointment_id/medicine/:medicine_id',
+    '/appointments/:appointment_id/medicine',
     PrescriptionController.store
 );
 
 routes.post('/specialty', SpecialtyCreateValidation, SpecialtyController.store);
 routes.put('/specialty/:id', SpecialtyController.update);
 routes.get('/specialty/:id', SpecialtyController.show);
+routes.delete('/specialty/:id', SpecialtyController.delete);
 routes.get('/specialty', SpecialtyController.index);
 
 routes.post('/users', UserCreateValidation, UserController.store);
@@ -83,6 +85,7 @@ routes.put(
 routes.get('/patients/:id/appointments', AppointmentController.index);
 routes.get('/patients', PatientController.index);
 routes.get('/patients/:id', PatientController.show);
+routes.get('/patients/:id/historic', HistoricController.show);
 routes.delete('/patients/:id', PatientController.delete);
 routes.post('/patients', PatientValidation, PatientController.store);
 routes.put('/patients', PatientValidation, PatientController.update);

@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import Exam from '../models/Exam';
 import Patient from '../models/Patient';
 import Appointment from '../models/Appointment';
@@ -8,6 +7,7 @@ class AppointmentExamController {
     async show(req, res) {
         const apiId = req.params.id;
         const { finished = false } = req.query;
+
         const exam = await Exam.findAll({
             where: {
                 appointment_id: apiId,

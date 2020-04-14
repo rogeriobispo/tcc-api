@@ -50,6 +50,18 @@ class UserController {
             name,
         });
     }
+
+    async delete(req, res) {
+        const spec = await Specialty.findByPk(req.params.id);
+
+        if (!spec)
+            return res
+                .status(404)
+                .json({ errors: 'Especialidade não localizado' });
+
+        await spec.destroy();
+        return res.status(204);
+    }
 }
 
 export default new UserController();

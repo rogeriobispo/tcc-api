@@ -72,7 +72,9 @@ class UserController {
     }
 
     async update(req, res) {
-        const { email } = req.body;
+        const { email, specialty_id } = req.body;
+        if (specialty_id === 0) req.body.specialty_id = null;
+
         const user = await User.findByPk(req.params.id);
         if (!user)
             return res.status(404).json({ errors: 'Usuario não localizado' });
