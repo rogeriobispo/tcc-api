@@ -34,7 +34,7 @@ import Authenticated from './app/middlewares/auth';
 
 const routes = new Router();
 const upload = multer(multerConfig);
-
+console.log('chamou router');
 routes.post('/sessions', SessionsValidator, SessionController.store);
 routes.get('/appointments/:id/exams', AppointmentExamController.show);
 routes.post('/files', upload.single('file'), FileController.store);
