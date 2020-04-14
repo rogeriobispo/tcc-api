@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { Cors } from 'Cors';
 import multer from 'multer';
 import multerConfig from './config/multer';
 
@@ -30,7 +31,7 @@ import AppointmentExamController from './app/controller/AppointmentExamControlle
 import HistoricController from './app/controller/HistoricController';
 
 import Authenticated from './app/middlewares/auth';
-import Cors from './app/middlewares/cors';
+// import Cors from './app/middlewares/cors';
 
 const routes = new Router();
 const upload = multer(multerConfig);
